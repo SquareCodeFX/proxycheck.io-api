@@ -14,9 +14,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 @UtilityClass
@@ -30,6 +28,10 @@ public class ProxyAPI {
     // I couldn't think of a better way to turn the result from the website into a Java object without any problems.
     // Therefore, I have taken Gson.
     private final Gson gson = new Gson();
+
+    // For better control over the thread I have now switched from the CompletableFutures
+    // to this Single Thread Service. This can be checked or terminated if desired
+    private final ExecutorService service = Executors.newSingleThreadExecutor();
 
     // To avoid unnecessary requests, I have implemented the Guava LoadingCache.
     // This keeps an IP in the cache for 60 minutes, after which it is removed and must be
@@ -51,9 +53,9 @@ public class ProxyAPI {
                                   Consumer<ExecutionException> exceptionConsumer) {
 
         // Checks if the passed argument is null. There are some jokers :P
-        Preconditions.checkNotNull(address, "Field address cannot be null");
+        Preconditions.checkNotNull(address, "Field <address> cannot be null");
 
-        CompletableFuture.runAsync(() -> {
+        service.submit(() -> {
             try {
                 addressObjectConsumer.accept(cacheCat.get(address));
             } catch (ExecutionException e) {
