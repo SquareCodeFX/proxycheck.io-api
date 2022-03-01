@@ -1,5 +1,6 @@
 package net.square;
 
+import com.google.common.base.Preconditions;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -48,6 +49,10 @@ public class ProxyAPI {
      */
     public void getObjectFromIPv4(String address, Consumer<AddressObject> addressObjectConsumer,
                                   Consumer<ExecutionException> exceptionConsumer) {
+
+        // Checks if the passed argument is null. There are some jokers :P
+        Preconditions.checkNotNull(address, "Field address cannot be null");
+
         CompletableFuture.runAsync(() -> {
             try {
                 addressObjectConsumer.accept(cacheCat.get(address));
