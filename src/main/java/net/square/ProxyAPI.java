@@ -42,12 +42,12 @@ public class ProxyAPI {
         .build(CacheLoader.from(ProxyAPI::fetchData));
 
     /**
-     * Looks in the LoadingCache for the AddressObject of the passing IPv4.
+     * Looks in the LoadingCache for the {@link AddressObject} of the passing IPv4.
      * If this is not available, the cache fetches this object via the fetchData method. This whole process is
      * asynchronous.
      *
      * @param address               The IPv4 as plain string
-     * @param addressObjectConsumer Contains the AddressObject of the passed IPv4 address if available.
+     * @param addressObjectConsumer Contains the {@link AddressObject} of the passed IPv4 address if available.
      * @param exceptionConsumer     Contains the exception, if any, that may have occurred while processing the request.
      */
     public void getObjectFromIPv4(String address, Consumer<AddressObject> addressObjectConsumer,
@@ -66,10 +66,10 @@ public class ProxyAPI {
     }
 
     /**
-     * Formats the return from the https://proxycheck.io page as AddressObject and inserts it into the cache.
+     * Formats the return from the https://proxycheck.io page as {@link AddressObject} and inserts it into the cache.
      *
      * @param address The IPv4 as plain string
-     * @return https://proxycheck.io result as AddressObject
+     * @return https://proxycheck.io result as {@link AddressObject}
      * @throws NullPointerException If an error occurs while establishing the connection or processing the result.
      */
     private AddressObject fetchData(String address) {
