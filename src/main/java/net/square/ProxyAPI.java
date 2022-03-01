@@ -84,13 +84,7 @@ public class ProxyAPI {
             throw new NullPointerException("Status field is missing or status field is not ok");
         }
 
-        AddressObject addressObject = gson.fromJson(getStringObjectOfObject(jsonObject, address), AddressObject.class);
-
-        // May be removed if ".build" already acts as .put
-        cacheCat.put(address, addressObject);
-
-        return addressObject;
-
+        return gson.fromJson(getStringObjectOfObject(jsonObject, address), AddressObject.class);
     }
 
     /**
