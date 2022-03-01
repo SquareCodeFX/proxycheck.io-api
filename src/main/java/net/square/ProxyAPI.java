@@ -43,11 +43,12 @@ public class ProxyAPI {
 
     /**
      * Looks in the LoadingCache for the AddressObject of the passing IPv4.
-     * If this is not available, the cache fetches this object via the fetchData method. This whole process is asynchronous.
+     * If this is not available, the cache fetches this object via the fetchData method. This whole process is
+     * asynchronous.
      *
-     * @param address The IPv4 as plain string
+     * @param address               The IPv4 as plain string
      * @param addressObjectConsumer Contains the AddressObject of the passed IPv4 address if available.
-     * @param exceptionConsumer Contains the exception, if any, that may have occurred while processing the request.
+     * @param exceptionConsumer     Contains the exception, if any, that may have occurred while processing the request.
      */
     public void getObjectFromIPv4(String address, Consumer<AddressObject> addressObjectConsumer,
                                   Consumer<ExecutionException> exceptionConsumer) {
@@ -69,25 +70,52 @@ public class ProxyAPI {
      *
      * @param address The IPv4 as plain string
      * @return https://proxycheck.io result as AddressObject
-     * @throws RuntimeException If an error occurs while establishing the connection or processing the result.
+     * @throws NullPointerException If an error occurs while establishing the connection or processing the result.
      */
     private AddressObject fetchData(String address) {
 
-        JsonObject jsonObject;
+        JsonObject jsonObject = getJsonObjectFromUrl(formatIPv4(address));
+
+        Preconditions.checkNotNull(jsonObject, "Object is null");
+
+        if (jsonObject.get("status") == null ||
+            !jsonObject.get("status").getAsString().equalsIgnoreCase("ok")) {
+
+            throw new NullPointerException("Status field is missing or status field is not ok");
+        }
+
+        AddressObject addressObject = gson.fromJson(getStringObjectOfObject(jsonObject, address), AddressObject.class);
+
+        // May be removed if ".build" already acts as .put
+        cacheCat.put(address, addressObject);
+
+        return addressObject;
+
+    }
+
+    /**
+     * Fetches an object from an object at a given field name.
+     *
+     * @param object The object from which you want to have something
+     * @param field What the JsonObject inside the object is called and how to get it. Field name
+     * @return Returns the JsonObject from the JsonObject
+     */
+    private String getStringObjectOfObject(JsonObject object, String field) {
+        return object.get(field).getAsJsonObject().toString();
+    }
+
+    /**
+     * Converts the JsonObject behind a URL link to a JsonObject local
+     *
+     * @param url URL link from which the object should be fetched
+     * @return Returns the object if it was successfully converted.
+     */
+    private JsonObject getJsonObjectFromUrl(String url) {
         try {
-            jsonObject = JsonParser.parseString(
-                IOUtils.toString(new URL(formatIPv4(address)), StandardCharsets.UTF_8)).getAsJsonObject();
+            return JsonParser.parseString(IOUtils.toString(new URL(url), StandardCharsets.UTF_8)).getAsJsonObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        if (jsonObject.get("status").getAsString().equalsIgnoreCase("ok")) {
-            AddressObject addressObject = gson.fromJson(
-                jsonObject.get(address).getAsJsonObject().toString(), AddressObject.class);
-            cacheCat.put(address, addressObject);
-            return addressObject;
-        }
-        return null;
     }
 
     /**
