@@ -3,10 +3,14 @@ package net.square.impl;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import net.square.ProxyAPI;
 
-@Getter
-@AllArgsConstructor
-@EqualsAndHashCode
+/**
+ * An AddressObject is an object in which all parts of an IP address are united.
+ * In addition to the ASN number, the country of origin or the city of the IP address can also be found here.
+ * This information is provided by https://proxycheck.io, and I combine them via the interface in {@link ProxyAPI}.
+ */
+@Getter @AllArgsConstructor @EqualsAndHashCode
 public class AddressObject {
 
     private String asn;
