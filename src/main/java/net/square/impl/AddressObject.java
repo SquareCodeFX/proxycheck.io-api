@@ -10,7 +10,9 @@ import net.square.ProxyAPI;
  * In addition to the ASN number, the country of origin or the city of the IP address can also be found here.
  * This information is provided by https://proxycheck.io, and I combine them via the interface in {@link ProxyAPI}.
  */
-@Getter @AllArgsConstructor @EqualsAndHashCode
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode
 public class AddressObject {
 
     private String asn;
