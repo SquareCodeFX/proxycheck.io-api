@@ -77,12 +77,11 @@ public class ProxyAPI {
         JsonObject jsonObject = getJsonObjectFromUrl(formatIPv4(address));
 
         Preconditions.checkNotNull(jsonObject, "Object is null");
+        Preconditions.checkNotNull(jsonObject.get("status"), "Status reference is null");
 
-        if (jsonObject.get("status") == null ||
-            !jsonObject.get("status").getAsString().equalsIgnoreCase("ok")) {
+        String statusField = jsonObject.get("status").getAsString();
 
-            throw new NullPointerException("Status field is missing or status field is not ok");
-        }
+        Preconditions.checkArgument(!statusField.equalsIgnoreCase("ok"), "Status field is not okay");
 
         return gson.fromJson(getStringObjectOfObject(jsonObject, address), AddressObject.class);
     }
@@ -91,7 +90,7 @@ public class ProxyAPI {
      * Fetches an object from an object at a given field name.
      *
      * @param object The object from which you want to have something
-     * @param field What the JsonObject inside the object is called and how to get it. Field name
+     * @param field  What the JsonObject inside the object is called and how to get it. Field name
      * @return Returns the JsonObject from the JsonObject
      */
     private String getStringObjectOfObject(JsonObject object, String field) {
