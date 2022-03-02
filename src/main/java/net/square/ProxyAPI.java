@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import net.square.impl.AddressObject;
+import net.square.objectable.AddressObject;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
