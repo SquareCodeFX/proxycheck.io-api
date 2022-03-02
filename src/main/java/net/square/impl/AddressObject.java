@@ -1,6 +1,7 @@
 package net.square.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import net.square.ProxyAPI;
@@ -10,7 +11,7 @@ import net.square.ProxyAPI;
  * In addition to the ASN number, the country of origin or the city of the IP address can also be found here.
  * This information is provided by https://proxycheck.io, and I combine them via the interface in {@link ProxyAPI}.
  */
-@Getter
+@Data
 @AllArgsConstructor
 @EqualsAndHashCode
 public class AddressObject {

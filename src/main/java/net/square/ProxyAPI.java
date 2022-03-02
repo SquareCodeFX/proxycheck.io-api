@@ -7,6 +7,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.square.impl.AddressObject;
 import org.apache.commons.io.IOUtils;
@@ -48,7 +49,7 @@ public class ProxyAPI {
      * @param address   Contains the {@link AddressObject} of the passed IPv4 address if available.
      * @param ex        Contains the exception, if any, that may have occurred while processing the request.
      */
-    public void getObjectFromIPv4(final String ipAddress, final Consumer<AddressObject> address,
+    public void getObjectFromIPv4(@NonNull final String ipAddress, final Consumer<AddressObject> address,
                                   final Consumer<ExecutionException> ex) {
 
         // Checks if the passed argument is null. There are some jokers :P
@@ -68,7 +69,7 @@ public class ProxyAPI {
      * @return https://proxycheck.io result as {@link AddressObject}
      * @throws NullPointerException If an error occurs while establishing the connection or processing the result.
      */
-    private AddressObject fetchData(final String address) {
+    private AddressObject fetchData(@NonNull final String address) {
 
         JsonObject jsonObject = parseObjectFromURL(formatIPv4(address));
 
@@ -86,7 +87,7 @@ public class ProxyAPI {
      * @param field  What the JsonObject inside the object is called and how to get it. Field name
      * @return Returns the JsonObject from the JsonObject
      */
-    private String getObjectFromObject(final JsonObject object, final String field) {
+    private String getObjectFromObject(@NonNull final JsonObject object, @NonNull final String field) {
         return object.get(field).getAsJsonObject().toString();
     }
 
@@ -96,7 +97,7 @@ public class ProxyAPI {
      * @param url URL links from which the object should be fetched
      * @return Returns the object if it was successfully converted.
      */
-    private JsonObject parseObjectFromURL(final String url) {
+    private JsonObject parseObjectFromURL(@NonNull final String url) {
         try {
             return JsonParser.parseString(IOUtils.toString(new URL(url), StandardCharsets.UTF_8)).getAsJsonObject();
         } catch (IOException e) {
@@ -111,7 +112,7 @@ public class ProxyAPI {
      * @param address The IPv4 as plain string
      * @return Returns the https://proxycheck.io API URL formatted with the IPv4 and the API key.
      */
-    private String formatIPv4(final String address) {
+    private String formatIPv4(@NonNull final String address) {
         return String.format("https://proxycheck.io/v2/%s?key=%s?vpn=1&asn=1", address, PROXY_KEY);
     }
 }
