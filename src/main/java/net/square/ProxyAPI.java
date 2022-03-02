@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -30,10 +28,6 @@ public class ProxyAPI {
     // I couldn't think of a better way to turn the result from the website into a Java object without any problems.
     // Therefore, I have taken Gson.
     private final Gson gson = new Gson();
-
-    // For better control over the thread I have now switched from the CompletableFutures to this
-    // Single Thread Service. This can be checked or terminated if desired
-    private final ExecutorService service = Executors.newSingleThreadExecutor();
 
     // How many minutes should an entry be stored? The time format can be changed at LoadingCache.
     private static final int DURATION_TIME = 60;
@@ -60,13 +54,11 @@ public class ProxyAPI {
         // Checks if the passed argument is null. There are some jokers :P
         Preconditions.checkNotNull(ipAddress, "Field <address> cannot be null");
 
-        service.submit(() -> {
-            try {
-                address.accept(cacheCat.get(ipAddress));
-            } catch (ExecutionException e) {
-                ex.accept(e);
-            }
-        });
+        try {
+            address.accept(cacheCat.get(ipAddress));
+        } catch (ExecutionException e) {
+            ex.accept(e);
+        }
     }
 
     /**
@@ -78,13 +70,13 @@ public class ProxyAPI {
      */
     private AddressObject fetchData(final String address) {
 
-        JsonObject jsonObject = getJsonObjectFromUrl(formatIPv4(address));
+        JsonObject jsonObject = parseObjectFromURL(formatIPv4(address));
 
         Preconditions.checkNotNull(jsonObject);
         Preconditions.checkNotNull(jsonObject.get("status"));
         Preconditions.checkArgument(!jsonObject.get("status").getAsString().equalsIgnoreCase("ok"));
 
-        return gson.fromJson(getString(jsonObject, address), AddressObject.class);
+        return gson.fromJson(getObjectFromObject(jsonObject, address), AddressObject.class);
     }
 
     /**
@@ -94,20 +86,19 @@ public class ProxyAPI {
      * @param field  What the JsonObject inside the object is called and how to get it. Field name
      * @return Returns the JsonObject from the JsonObject
      */
-    private String getString(final JsonObject object, final String field) {
+    private String getObjectFromObject(final JsonObject object, final String field) {
         return object.get(field).getAsJsonObject().toString();
     }
 
     /**
      * Converts the JsonObject behind a URL link to a JsonObject local.
      *
-     * @param url URL link from which the object should be fetched
+     * @param url URL links from which the object should be fetched
      * @return Returns the object if it was successfully converted.
      */
-    private JsonObject getJsonObjectFromUrl(final String url) {
+    private JsonObject parseObjectFromURL(final String url) {
         try {
-            return JsonParser.parseString(IOUtils.toString(
-                new URL(url), StandardCharsets.UTF_8)).getAsJsonObject();
+            return JsonParser.parseString(IOUtils.toString(new URL(url), StandardCharsets.UTF_8)).getAsJsonObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -121,8 +112,6 @@ public class ProxyAPI {
      * @return Returns the https://proxycheck.io API URL formatted with the IPv4 and the API key.
      */
     private String formatIPv4(final String address) {
-        return String.format("https://proxycheck.io/v2/%s?key=%s?vpn=1&asn=1",
-                             address, PROXY_KEY
-        );
+        return String.format("https://proxycheck.io/v2/%s?key=%s?vpn=1&asn=1", address, PROXY_KEY);
     }
 }
