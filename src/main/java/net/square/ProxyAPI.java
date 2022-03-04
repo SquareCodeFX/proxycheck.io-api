@@ -111,7 +111,7 @@ public class ProxyAPI {
 
         Preconditions.checkNotNull(jsonObject);
         Preconditions.checkNotNull(jsonObject.get("status"));
-        Preconditions.checkArgument(!jsonObject.get("status").getAsString().equalsIgnoreCase("ok"));
+        Preconditions.checkArgument(jsonObject.get("status").getAsString().equalsIgnoreCase("ok"));
 
         return gson.fromJson(jsonObject.getAsJsonObject(ipAddress), AddressData.class);
     }
