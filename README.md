@@ -22,15 +22,16 @@ try {
 
 Async
 ```
-CompletableFuture<AddressData> addressDataFetch = ProxyAPI.fetchAddressDataForIPv4Async("214.196.212.251");
-
-        if (!addressDataFetch.isCancelled() && addressDataFetch.isDone()) {
-            try {
-                AddressData addressData = addressDataFetch.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+ProxyAPI.fetchAddressDataForIPv4Async("214.196.212.251").whenComplete((addressData, throwable) -> {
+           
+            if(throwable != null) {
+                throwable.printStackTrace();
+                return;
             }
-        }
+
+            System.out.println(addressData.getProxy());
+
+        });
 ```
 
 ## Contributing
