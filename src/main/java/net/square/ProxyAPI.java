@@ -128,11 +128,15 @@ public class ProxyAPI {
      * and passes them to the consumer in the form of an exception.
      * <br>
      * <p>
-     * In this method, not all messages from https://proxycheck.io are processed. Only the problems that have an impact on
+     * In this method, not all messages from https://proxycheck.io are processed. Only the problems that have an
+     * impact on
      * the functionality of the API are caught here. If you want to have a full list of all possible errors you can
      * have a look at it here: https://proxycheck.io/api/#test_console
      *
      * @param jsonObject The object from the https://proxycheck.io website
+     * @throws ProxyMalfunctionException {@link ProxyMalfunctionException} is thrown if a message is present
+     *                                   in the return value. Since these are always negative in nature, the exception
+     *                                   was named MalfunctionException.
      */
     @SneakyThrows
     private void handleMessage(JsonObject jsonObject) {
@@ -141,7 +145,7 @@ public class ProxyAPI {
 
         final JsonElement message = jsonObject.get("message");
 
-        if(message != null) {
+        if (message != null) {
             throw new ProxyMalfunctionException(message.getAsString());
         }
     }
