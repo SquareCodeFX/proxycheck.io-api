@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.NonNull;
@@ -17,7 +18,6 @@ import net.square.exceptions.ProxyMalfunctionException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Proxy;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -137,38 +137,12 @@ public class ProxyAPI {
     @SneakyThrows
     private void handleMessage(JsonObject jsonObject) {
 
-        String statusField = jsonObject.get("status").getAsString();
+        if (jsonObject.get("status").getAsString().equalsIgnoreCase("ok")) return;
 
-        if (statusField.equalsIgnoreCase("ok")) return;
+        final JsonElement message = jsonObject.get("message");
 
-        String messageField = jsonObject.get("message").getAsString();
-
-        switch (statusField) {
-            case "warning":
-                if (messageField.contains("API Key")) {
-                    throw new ProxyMalfunctionException(
-                        "Your API Key has been disabled for a violation of our terms of service.");
-                } else if (messageField.contains("100")) {
-                    throw new ProxyMalfunctionException("You're sending more than 100 requests per second.");
-                }
-                break;
-            case "denied":
-                if (messageField.contains("proxy")) {
-                    throw new ProxyMalfunctionException(
-                        "Your access to the API has been blocked due to using a proxy server to perform your query. "
-                            + "Please signup for an account to re-enable access by proxy.");
-                } else if(messageField.contains("1,000")) {
-                    throw new ProxyMalfunctionException(
-                        "1,000 free queries exhausted. Please try the API again tomorrow or purchase a higher paid plan.");
-                } else if(messageField.contains("125")) {
-                    throw new ProxyMalfunctionException(
-                        "You're sending more than 125 requests per second.");
-                }
-                break;
-            case "error":
-                throw new ProxyMalfunctionException("No valid IP Addresses supplied.");
-            default:
-                break;
+        if(message != null) {
+            throw new ProxyMalfunctionException(message.getAsString());
         }
     }
 
