@@ -12,10 +12,12 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import net.square.address.AddressData;
 import net.square.exceptions.AddressDataFetchingException;
+import net.square.exceptions.ProxyMalfunctionException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -74,7 +76,7 @@ public class ProxyAPI {
      * Wraps the execution of {@link #fetchAddressDataForIPv4(String)} inside a {@link CompletableFuture} to retrieve
      * its result asynchronously.
      * <br>
-     *
+     * <p>
      * Thrown {@link Exception}s, like {@link AddressDataFetchingException}, have to be handled by using
      * {@link CompletableFuture#exceptionally(Function)} or {@link CompletableFuture#whenComplete(BiConsumer)}.
      *
@@ -101,7 +103,9 @@ public class ProxyAPI {
      */
     @SneakyThrows
     private AddressData fetchData(@NonNull String ipAddress) {
+
         Preconditions.checkNotNull(ipAddress, "Field ipAddress cannot be null");
+
         JsonObject jsonObject;
         try {
             jsonObject = parseJsonObjectFromURL(formatURL(ipAddress));
@@ -109,11 +113,63 @@ public class ProxyAPI {
             throw new AddressDataFetchingException("Failed to fetch data for address %s".formatted(ipAddress), e);
         }
 
+        // Processing of reports from https://proxycheck.io
+        handleMessage(jsonObject);
+
         Preconditions.checkNotNull(jsonObject);
         Preconditions.checkNotNull(jsonObject.get("status"));
         Preconditions.checkArgument(jsonObject.get("status").getAsString().equalsIgnoreCase("ok"));
 
         return gson.fromJson(jsonObject.getAsJsonObject(ipAddress), AddressData.class);
+    }
+
+    /**
+     * This method processes the status as well as the messages from https://proxycheck.io
+     * and passes them to the consumer in the form of an exception.
+     * <br>
+     * <p>
+     * In this method, not all messages from https://proxycheck.io are processed. Only the problems that have an impact on
+     * the functionality of the API are caught here. If you want to have a full list of all possible errors you can
+     * have a look at it here: https://proxycheck.io/api/#test_console
+     *
+     * @param jsonObject The object from the https://proxycheck.io website
+     */
+    @SneakyThrows
+    private void handleMessage(JsonObject jsonObject) {
+
+        String statusField = jsonObject.get("status").getAsString();
+
+        if (statusField.equalsIgnoreCase("ok")) return;
+
+        String messageField = jsonObject.get("message").getAsString();
+
+        switch (statusField) {
+            case "warning":
+                if (messageField.contains("API Key")) {
+                    throw new ProxyMalfunctionException(
+                        "Your API Key has been disabled for a violation of our terms of service.");
+                } else if (messageField.contains("100")) {
+                    throw new ProxyMalfunctionException("You're sending more than 100 requests per second.");
+                }
+                break;
+            case "denied":
+                if (messageField.contains("proxy")) {
+                    throw new ProxyMalfunctionException(
+                        "Your access to the API has been blocked due to using a proxy server to perform your query. "
+                            + "Please signup for an account to re-enable access by proxy.");
+                } else if(messageField.contains("1,000")) {
+                    throw new ProxyMalfunctionException(
+                        "1,000 free queries exhausted. Please try the API again tomorrow or purchase a higher paid plan.");
+                } else if(messageField.contains("125")) {
+                    throw new ProxyMalfunctionException(
+                        "You're sending more than 125 requests per second.");
+                }
+                break;
+            case "error":
+                throw new ProxyMalfunctionException("No valid IP Addresses supplied.");
+            default:
+                break;
+        }
     }
 
     /**
