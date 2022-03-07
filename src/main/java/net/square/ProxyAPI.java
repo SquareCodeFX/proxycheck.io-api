@@ -134,9 +134,9 @@ public class ProxyAPI {
      * have a look at it here: https://proxycheck.io/api/#test_console
      *
      * @param jsonObject The object from the https://proxycheck.io website
-     * @throws ProxyMalfunctionException {@link ProxyMalfunctionException} is thrown if a message is present
-     *                                   in the return value. Since these are always negative in nature, the exception
-     *                                   was named MalfunctionException.
+     *
+     * It will throw an {@link ProxyMalfunctionException} is thrown if a message is present
+     * in the return value. Since these are always negative in nature, the exception was named MalfunctionException.
      */
     @SneakyThrows
     private void handleMessage(JsonObject jsonObject) {
