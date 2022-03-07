@@ -143,7 +143,7 @@ public class ProxyAPI {
 
         if (jsonObject.get("status").getAsString().equalsIgnoreCase("ok")) return;
 
-        final JsonElement message = jsonObject.get("message");
+        JsonElement message = jsonObject.get("message");
 
         if (message != null) {
             throw new ProxyMalfunctionException(message.getAsString());
