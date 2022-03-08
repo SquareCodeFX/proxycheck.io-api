@@ -40,6 +40,7 @@ public class ProxyAPI {
 
     // How long should an entry be stored?
     private static final int DURATION_TIME = 60;
+
     // In which time unit should the duration time last?
     private static final TimeUnit DURATION_UNIT = TimeUnit.MINUTES;
 
