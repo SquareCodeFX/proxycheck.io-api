@@ -30,7 +30,8 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public class ProxyAPI {
 
-    // TODO: add short description
+    // https://proxycheck.io is an online security service offering Proxy
+    // and VPN detection and generalised IP location information.
     private static final String API_URL = "https://proxycheck.io/v2/%s?key=%s?vpn=1&asn=1";
 
     // If you have a plan on https://proxycheck.io, you should enter your key here. If you don't have one, you are
