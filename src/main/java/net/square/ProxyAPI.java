@@ -113,12 +113,12 @@ public class ProxyAPI {
             throw new AddressDataFetchingException("Failed to fetch data for address %s".formatted(ipAddress), e);
         }
 
-        // Processing of reports from https://proxycheck.io
-        handleMessage(jsonObject);
-
         Preconditions.checkNotNull(jsonObject);
         Preconditions.checkNotNull(jsonObject.get("status"));
         Preconditions.checkArgument(jsonObject.get("status").getAsString().equalsIgnoreCase("ok"));
+
+        // Processing of reports from https://proxycheck.io
+        handleMessage(jsonObject);
 
         return gson.fromJson(jsonObject.getAsJsonObject(ipAddress), AddressData.class);
     }
@@ -140,8 +140,6 @@ public class ProxyAPI {
      */
     @SneakyThrows
     private void handleMessage(JsonObject jsonObject) {
-
-        if (jsonObject.get("status").getAsString().equalsIgnoreCase("ok")) return;
 
         JsonElement message = jsonObject.get("message");
 
