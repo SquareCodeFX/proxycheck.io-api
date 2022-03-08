@@ -85,6 +85,7 @@ public class ProxyAPI {
      * @return The
      */
     public CompletableFuture<AddressData> fetchAddressDataForIPv4Async(@NonNull String ipAddress) {
+        // Checks if the passed argument is null. There are some jokers :P
         Preconditions.checkNotNull(ipAddress, "Field ipAddress cannot be null");
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -135,9 +136,10 @@ public class ProxyAPI {
      * have a look at it here: https://proxycheck.io/api/#test_console
      *
      * @param jsonObject The object from the https://proxycheck.io website
-     *
-     * It will throw an {@link ProxyMalfunctionException} is thrown if a message is present
-     * in the return value. Since these are always negative in nature, the exception was named MalfunctionException.
+     *                   <p>
+     *                   It will throw an {@link ProxyMalfunctionException} is thrown if a message is present
+     *                   in the return value. Since these are always negative in nature, the exception was named
+     *                   MalfunctionException.
      */
     @SneakyThrows
     private void handleMessage(JsonObject jsonObject) {
