@@ -83,7 +83,7 @@ public class ProxyAPI {
      * {@link CompletableFuture#exceptionally(Function)} or {@link CompletableFuture#whenComplete(BiConsumer)}.
      *
      * @param ipAddress A IPv4 address in string representation.
-     * @return The
+     * @return The {@link AddressData} object
      */
     public CompletableFuture<AddressData> fetchAddressDataForIPv4Async(@NonNull String ipAddress) {
         // Checks if the passed argument is null. There are some jokers :P
@@ -98,7 +98,8 @@ public class ProxyAPI {
     }
 
     /**
-     * Converts the response body received by the HTTP GET request to the https://proxycheck.io API
+     * Converts the response body received by the HTTP GET request to the
+     * <a href="https://proxycheck.io">https://proxycheck.io</a> API
      * to an {@link AddressData} object.
      *
      * @param ipAddress A IPv4 address represented as a string.
@@ -127,16 +128,19 @@ public class ProxyAPI {
     }
 
     /**
-     * This method processes the status as well as the messages from https://proxycheck.io
+     * This method processes the status as well as the messages from
+     * <a href="https://proxycheck.io">https://proxycheck.io</a>
      * and passes them to the consumer in the form of an exception.
      * <br>
      * <p>
-     * In this method, not all messages from https://proxycheck.io are processed. Only the problems that have an
+     * In this method, not all messages from <a href="https://proxycheck.io">https://proxycheck.io</a>
+     * are processed. Only the problems that have an
      * impact on
      * the functionality of the API are caught here. If you want to have a full list of all possible errors you can
-     * have a look at it here: https://proxycheck.io/api/#test_console
+     * have a look at it here:
+     * <a href="https://proxycheck.io/api/#test_console">https://proxycheck.io/api/#test_console</a>
      *
-     * @param jsonObject The object from the https://proxycheck.io website
+     * @param jsonObject The object from the <a href="https://proxycheck.io">https://proxycheck.io</a> website
      *                   <p>
      *                   It will throw an {@link ProxyMalfunctionException} is thrown if a message is present
      *                   in the return value. Since these are always negative in nature, the exception was named
