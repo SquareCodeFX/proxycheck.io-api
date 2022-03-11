@@ -5,7 +5,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.NonNull;
@@ -147,12 +146,12 @@ public class ProxyAPI {
      *                   MalfunctionException.
      */
     @SneakyThrows
-    private void handleMessage(JsonObject jsonObject) {
+    private void handleMessage(@NonNull JsonObject jsonObject) {
 
-        JsonElement message = jsonObject.get("message");
+        Preconditions.checkNotNull(jsonObject, "Given object cannot be null");
 
-        if (message != null) {
-            throw new ProxyMalfunctionException(message.getAsString());
+        if (jsonObject.get("message") != null) {
+            throw new ProxyMalfunctionException(jsonObject.get("message").getAsString());
         }
     }
 
