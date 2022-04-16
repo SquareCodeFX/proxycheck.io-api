@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutionException;
 // This is an example class that could be like this in your project.
 @SuppressWarnings("unused")
 public class MainExample {
-
     // Main method that starts your process.
     public static void main(String[] args) {
 
