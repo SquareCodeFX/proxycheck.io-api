@@ -1,6 +1,7 @@
 # Proxycheck.io Java-API
+
 > A mature API to work sync/async with Proxycheck.io.
-> 
+>
 ![Issues][issues]
 ![Forks][forks]
 ![Stars][stars]
@@ -8,11 +9,32 @@
 
 ## Installation
 
+Get from maven
+
+```
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependency>
+    <groupId>com.github.SquareCodeFX</groupId>
+    <artifactId>proxycheck.io-api</artifactId>
+    <version>1.0.2</version>
+    <scope>compile</scope>
+</dependency>
+```
+
 Compile
+
 ```
 maven build
 ```
+
 Dependency's
+
 ```
 <dependencies>
         <dependency>
@@ -38,9 +60,11 @@ Dependency's
 
 ## Usage example
 
-Here are a few examples of how to work with the API. Examples are provided for both the synchronous and the asynchronous part.
+Here are a few examples of how to work with the API. Examples are provided for both the synchronous and the asynchronous
+part.
 
 Sync
+
 ```
 try {
     AddressData addressData = ProxyAPI.fetchAddressDataForIPv4("214.196.212.251");
@@ -50,6 +74,7 @@ try {
 ```
 
 Async
+
 ```
 ProxyAPI.fetchAddressDataForIPv4Async("214.196.212.251").whenComplete((addressData, throwable) -> {
            
@@ -72,6 +97,9 @@ ProxyAPI.fetchAddressDataForIPv4Async("214.196.212.251").whenComplete((addressDa
 5. Create a new Pull Request
 
 [issues]: https://img.shields.io/github/issues/SquareCodeFX/proxycheck.io-api
+
 [forks]: https://img.shields.io/github/forks/SquareCodeFX/proxycheck.io-api
+
 [stars]: https://img.shields.io/github/stars/SquareCodeFX/proxycheck.io-api
+
 [license]: https://img.shields.io/github/license/SquareCodeFX/proxycheck.io-api
