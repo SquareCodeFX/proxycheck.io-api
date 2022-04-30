@@ -43,10 +43,10 @@ Here are a few examples of how to work with the API. Examples are provided for b
 Sync
 ```
 try {
-            AddressData addressData = ProxyAPI.fetchAddressDataForIPv4("214.196.212.251");
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+    AddressData addressData = ProxyAPI.fetchAddressDataForIPv4("214.196.212.251");
+    } catch (ExecutionException e) {
+        e.printStackTrace();
+    }
 ```
 
 Async
