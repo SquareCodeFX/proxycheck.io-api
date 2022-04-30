@@ -5,7 +5,6 @@
 ![Forks][forks]
 ![Stars][stars]
 ![License][license]
-![Twitter][twitter]
 
 ## Installation
 
@@ -76,4 +75,3 @@ ProxyAPI.fetchAddressDataForIPv4Async("214.196.212.251").whenComplete((addressDa
 [forks]: https://img.shields.io/github/forks/SquareCodeFX/proxycheck.io-api
 [stars]: https://img.shields.io/github/stars/SquareCodeFX/proxycheck.io-api
 [license]: https://img.shields.io/github/license/SquareCodeFX/proxycheck.io-api
-[twitter]: https://img.shields.io/twitter/url?style=social
