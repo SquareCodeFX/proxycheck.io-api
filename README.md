@@ -53,14 +53,14 @@ Async
 ```
 ProxyAPI.fetchAddressDataForIPv4Async("214.196.212.251").whenComplete((addressData, throwable) -> {
            
-            if(throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
+      if(throwable != null) {
+          throwable.printStackTrace();
+          return;
+      }
 
-            System.out.println(addressData.getProxy());
+      System.out.println(addressData.getProxy());
 
-        });
+});
 ```
 
 ## Contributing
