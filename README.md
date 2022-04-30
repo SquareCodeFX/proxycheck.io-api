@@ -1,5 +1,6 @@
 # Proxycheck.io Java-API
 > A mature API to work sync/async with Proxycheck.io.
+[Issues](https://img.shields.io/github/issues/SquareCodeFX/proxycheck.io-api) [Forks](https://img.shields.io/github/forks/SquareCodeFX/proxycheck.io-api) [Stars](https://img.shields.io/github/stars/SquareCodeFX/proxycheck.io-api) [License](https://img.shields.io/github/license/SquareCodeFX/proxycheck.io-api) [Tweet it](https://img.shields.io/twitter/url?style=social)
 
 ## Installation
 
