@@ -1,6 +1,7 @@
 # Proxycheck.io Java-API
 > A mature API to work sync/async with Proxycheck.io.
-[Issues](https://img.shields.io/github/issues/SquareCodeFX/proxycheck.io-api) [Forks](https://img.shields.io/github/forks/SquareCodeFX/proxycheck.io-api) [Stars](https://img.shields.io/github/stars/SquareCodeFX/proxycheck.io-api) [License](https://img.shields.io/github/license/SquareCodeFX/proxycheck.io-api) [Tweet it](https://img.shields.io/twitter/url?style=social)
+> 
+[![Issues][issues]]
 
 ## Installation
 
@@ -66,3 +67,9 @@ ProxyAPI.fetchAddressDataForIPv4Async("214.196.212.251").whenComplete((addressDa
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
+
+[issues]: https://img.shields.io/github/issues/SquareCodeFX/proxycheck.io-api
+[forks]: https://img.shields.io/github/forks/SquareCodeFX/proxycheck.io-api
+[stars]: https://img.shields.io/github/stars/SquareCodeFX/proxycheck.io-api
+[license]: https://img.shields.io/github/license/SquareCodeFX/proxycheck.io-api
+[twitter]: https://img.shields.io/twitter/url?style=social
