@@ -2,6 +2,10 @@
 > A mature API to work sync/async with Proxycheck.io.
 > 
 ![Issues][issues]
+![Forks][forks]
+![Stars][stars]
+![License][license]
+![Twitter][twitter]
 
 ## Installation
 
