@@ -22,7 +22,7 @@ Get from maven
 <dependency>
     <groupId>com.github.SquareCodeFX</groupId>
     <artifactId>proxycheck.io-api</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <scope>compile</scope>
 </dependency>
 ```

@@ -12,6 +12,6 @@ So if you use another version, do not expect any help from us.
 
 ## Reporting a Vulnerability
 
-- For feature requests and reporting erros, bugs and bypasses, use the Github issues task.
-- For simple questions, use the Github issues task.
+- For feature requests and reporting errors and bugs, use the GitHub issues task.
+- For simple questions, use the GitHub issues task.
 - For piracy and resource ownership related issues, email me: admin@squarecode.de

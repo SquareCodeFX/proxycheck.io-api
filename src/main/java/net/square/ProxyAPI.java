@@ -118,7 +118,6 @@ public class ProxyAPI {
 
         Preconditions.checkNotNull(jsonObject);
         Preconditions.checkNotNull(jsonObject.get("status"));
-        Preconditions.checkArgument(jsonObject.get("status").getAsString().equalsIgnoreCase("ok"));
 
         // Processing of reports from https://proxycheck.io
         handleMessage(jsonObject);
