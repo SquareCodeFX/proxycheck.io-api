@@ -67,10 +67,12 @@ Sync
 
 ```
 try {
+
     AddressData addressData = ProxyAPI.fetchAddressDataForIPv4("214.196.212.251");
+    
     } catch (ExecutionException e) {
         e.printStackTrace();
-    }
+}
 ```
 
 Async
@@ -84,7 +86,6 @@ ProxyAPI.fetchAddressDataForIPv4Async("214.196.212.251").whenComplete((addressDa
       }
 
       System.out.println(addressData.getProxy());
-
 });
 ```
 
