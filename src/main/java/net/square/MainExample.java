@@ -3,6 +3,7 @@ package net.square;
 import net.square.address.AddressData;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 // This is an example class that could be like this in your project.
 @SuppressWarnings("unused")
@@ -12,6 +13,17 @@ public class MainExample {
 
         // For testing, the IP address of the provider https://prohosting24.de was used here.
         final String address = "45.142.115.247";
+
+        // If changes need to be made to the license key, this method can be called.
+        // However, if you do not have a plan, you do not have to
+        // do this, otherwise it will take the Default parameter.
+        ProxyAPI.setProxyKey("license_here");
+
+        // How long should the objects stay in the cache?
+        ProxyAPI.setDurationTime(60);
+
+        // What should be the time format? See durationTime
+        ProxyAPI.setDurationUnit(TimeUnit.MINUTES);
 
         // Thus, it is possible to access the information of an IP synchronously.
         try {
@@ -40,6 +52,7 @@ public class MainExample {
             String country = addressData.getCountry();
             String city = addressData.getCity();
             String provider = addressData.getProvider();
+
             // And so on...
         });
     }

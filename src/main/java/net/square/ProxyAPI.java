@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import net.square.address.AddressData;
@@ -35,13 +36,16 @@ public class ProxyAPI {
 
     // If you have a plan on https://proxycheck.io, you should enter your key here. If you don't have one, you are
     // free to make 1000 requests per day for your own server/computer IP. I recommend buying a plan though.
-    private static final String PROXY_KEY = "insert_key";
+    @Setter
+    private static String proxyKey = "insert_key";
 
     // How long should an entry be stored?
-    private static final int DURATION_TIME = 60;
+    @Setter
+    private static int durationTime = 60;
 
     // In which time unit should the duration time last?
-    private static final TimeUnit DURATION_UNIT = TimeUnit.MINUTES;
+    @Setter
+    private static TimeUnit durationUnit = TimeUnit.MINUTES;
 
     // I couldn't think of a better way to turn the result from the website into a Java object without any problems.
     // Therefore, I have taken Gson.
@@ -51,7 +55,7 @@ public class ProxyAPI {
     // 60 minutes, after which it is removed and must be fetched again from the website when it is accessed again.
     // I recommend installing an own cache beside this one.
     private final LoadingCache<String, AddressData> cacheCat = CacheBuilder.newBuilder()
-        .expireAfterAccess(DURATION_TIME, DURATION_UNIT)
+        .expireAfterAccess(durationTime, durationUnit)
         .build(CacheLoader.from(ProxyAPI::fetchData));
 
     /**
@@ -59,7 +63,7 @@ public class ProxyAPI {
      * attempts to fetch this object via {@link ProxyAPI#fetchData(String)}.
      * <br>
      * The cached entry will expire after every access after the given time
-     * (see {@link #DURATION_TIME} and {@link #DURATION_UNIT}).
+     * (see {@link #durationTime} and {@link #durationUnit}).
      * <br>
      * Will throw if the cache fails during the fetch or when the fetched data returns null.
      *
@@ -173,6 +177,6 @@ public class ProxyAPI {
      * @return A formatted string {@link ProxyAPI#API_URL}.
      */
     private String formatURL(@NonNull String address) {
-        return String.format(API_URL, address, PROXY_KEY);
+        return String.format(API_URL, address, proxyKey);
     }
 }
