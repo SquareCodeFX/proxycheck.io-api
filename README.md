@@ -63,8 +63,24 @@ Dependency's
 Here are a few examples of how to work with the API. Examples are provided for both the synchronous and the asynchronous
 part.
 
-Sync
+Init
 
+```
+ProxyAPI proxyAPI = ProxyAPI.builder()
+    // If changes need to be made to the license key, this method can be called.
+    // However, if you do not have a plan, you do not have to
+    // do this, otherwise it will take the Default parameter.
+    .proxyKey("license_here")
+    // How long should the objects stay in the cache?
+    .durationTime(60)
+    // What should be the time format? See durationTime
+    .durationUnit(TimeUnit.MINUTES)
+    // Build class
+    .build();
+```
+
+
+Fetch sync
 ```
 try {
 
@@ -75,8 +91,8 @@ try {
 }
 ```
 
-Async
 
+Fetch async
 ```
 ProxyAPI.fetchAddressDataForIPv4Async("214.196.212.251").whenComplete((addressData, throwable) -> {
            

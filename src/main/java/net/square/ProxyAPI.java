@@ -7,10 +7,10 @@ import com.google.common.cache.LoadingCache;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 import net.square.address.AddressData;
 import net.square.exceptions.AddressDataFetchingException;
 import net.square.exceptions.ProxyMalfunctionException;
@@ -26,8 +26,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-@UtilityClass
 @SuppressWarnings("unused")
+@Builder
 public class ProxyAPI {
 
     // https://proxycheck.io is an online security service offering Proxy
@@ -36,16 +36,16 @@ public class ProxyAPI {
 
     // If you have a plan on https://proxycheck.io, you should enter your key here. If you don't have one, you are
     // free to make 1000 requests per day for your own server/computer IP. I recommend buying a plan though.
-    @Setter
-    private static String proxyKey = "insert_key";
+    @Getter
+    private String proxyKey = "insert_key";
 
     // How long should an entry be stored?
-    @Setter
-    private static int durationTime = 60;
+    @Getter
+    private int durationTime = 60;
 
     // In which time unit should the duration time last?
-    @Setter
-    private static TimeUnit durationUnit = TimeUnit.MINUTES;
+    @Getter
+    private TimeUnit durationUnit = TimeUnit.MINUTES;
 
     // I couldn't think of a better way to turn the result from the website into a Java object without any problems.
     // Therefore, I have taken Gson.
@@ -56,7 +56,7 @@ public class ProxyAPI {
     // I recommend installing an own cache beside this one.
     private final LoadingCache<String, AddressData> cacheCat = CacheBuilder.newBuilder()
         .expireAfterAccess(durationTime, durationUnit)
-        .build(CacheLoader.from(ProxyAPI::fetchData));
+        .build(CacheLoader.from(this::fetchData));
 
     /**
      * Looks up an {@link AddressData} object for the passed IPv4 address inside the cache. If not cached, the cache
