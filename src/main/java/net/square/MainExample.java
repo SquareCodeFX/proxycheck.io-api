@@ -11,8 +11,8 @@ public class MainExample {
     // Main method that starts your process.
     public static void main(String[] args) {
 
-        // Init with {@link lombok.Builder
-        ProxyAPI proxyAPI = ProxyAPI.builder()
+        // Init with {@link lombok.Builder}
+        final var proxyAPI = ProxyAPI.builder()
             // If changes need to be made to the license key, this method can be called.
             // However, if you do not have a plan, you do not have to
             // do this, otherwise it will take the Default parameter.
@@ -25,15 +25,15 @@ public class MainExample {
             .build();
 
         // For testing, the IP address of the provider https://prohosting24.de was used here.
-        final String address = "45.142.115.247";
+        final var address = "45.142.115.247";
 
         // Thus, it is possible to access the information of an IP synchronously.
         try {
             AddressData addressData = proxyAPI.fetchAddressDataForIPv4(address);
 
-            String country = addressData.getCountry();
-            String city = addressData.getCity();
-            String provider = addressData.getProvider();
+            var country = addressData.country();
+            var city = addressData.city();
+            var provider = addressData.provider();
             // And so on...
 
         } catch (ExecutionException e) {
@@ -45,15 +45,15 @@ public class MainExample {
 
             // The exception is always null if everything worked properly.
             // If an error occurred during the process, this exception will
-            // not be null and will be thrown. Thus, the process will then also be terminated.
+            // not be null and will be thrown. The process will also be terminated.
             if(throwable != null) {
                 throwable.printStackTrace();
                 return;
             }
 
-            String country = addressData.getCountry();
-            String city = addressData.getCity();
-            String provider = addressData.getProvider();
+            var country = addressData.country();
+            var city = addressData.city();
+            var provider = addressData.provider();
 
             // And so on...
         });

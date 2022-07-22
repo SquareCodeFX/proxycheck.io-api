@@ -1,6 +1,5 @@
 package net.square;
 
-import com.google.common.base.Preconditions;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -13,7 +12,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import net.square.address.AddressData;
 import net.square.exceptions.AddressDataFetchingException;
-import net.square.exceptions.ProxyMalfunctionException;
+import net.square.exceptions.ProxyCheckBlockingException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedAssignment"})
 @Builder
 public class ProxyAPI {
 
@@ -73,7 +72,7 @@ public class ProxyAPI {
      */
     public AddressData fetchAddressDataForIPv4(@NonNull String ipAddress) throws ExecutionException {
         // Checks if the passed argument is null. There are some jokers :P
-        Preconditions.checkNotNull(ipAddress, "Field ipAddress cannot be null");
+        Validation.checkNotNull(ipAddress, "Field ipAddress cannot be null");
         return cacheCat.get(ipAddress);
     }
 
@@ -90,7 +89,7 @@ public class ProxyAPI {
      */
     public CompletableFuture<AddressData> fetchAddressDataForIPv4Async(@NonNull String ipAddress) {
         // Checks if the passed argument is null. There are some jokers :P
-        Preconditions.checkNotNull(ipAddress, "Field ipAddress cannot be null");
+        Validation.checkNotNull(ipAddress, "Field ipAddress cannot be null");
         return CompletableFuture.supplyAsync(() -> {
             try {
                 return fetchAddressDataForIPv4(ipAddress);
@@ -110,9 +109,6 @@ public class ProxyAPI {
      */
     @SneakyThrows
     private AddressData fetchData(@NonNull String ipAddress) {
-
-        Preconditions.checkNotNull(ipAddress, "Field ipAddress cannot be null");
-
         JsonObject jsonObject;
         try {
             jsonObject = parseJsonObjectFromURL(formatURL(ipAddress));
@@ -120,12 +116,15 @@ public class ProxyAPI {
             throw new AddressDataFetchingException("Failed to fetch data for address %s".formatted(ipAddress), e);
         }
 
-        Preconditions.checkNotNull(jsonObject);
-        Preconditions.checkNotNull(jsonObject.get("status"));
+        Validation.checkNotNull(jsonObject, "Object is null. No internet connection?");
+        Validation.checkNotNull(jsonObject.get("status"), "Invalid object. Maybe timeout?");
 
         // Processing of reports from https://proxycheck.io
-        handleMessage(jsonObject);
-
+        if (isBlockingResponse(jsonObject)) {
+            throw new ProxyCheckBlockingException(
+                "%s|%s".formatted(jsonObject.get("status").getAsString().toUpperCase(),
+                                  jsonObject.get("message").getAsString()));
+        }
         return gson.fromJson(jsonObject.getAsJsonObject(ipAddress), AddressData.class);
     }
 
@@ -144,22 +143,18 @@ public class ProxyAPI {
      *
      * @param jsonObject The object from the <a href="https://proxycheck.io">https://proxycheck.io</a> website
      *                   <p>
-     *                   It will throw an {@link ProxyMalfunctionException} is thrown if a message is present
+     *                   It will throw an {@link ProxyCheckBlockingException} is thrown if a message is present
      *                   in the return value. Since these are always negative in nature, the exception was named
      *                   MalfunctionException.
      */
     @SneakyThrows
-    private void handleMessage(@NonNull JsonObject jsonObject) {
-
-        Preconditions.checkNotNull(jsonObject, "Given object cannot be null");
-
-        if (jsonObject.get("message") != null) {
-            throw new ProxyMalfunctionException(jsonObject.get("message").getAsString());
-        }
+    private boolean isBlockingResponse(@NonNull JsonObject jsonObject) {
+        final String status = jsonObject.get("status").getAsString();
+        return status.equalsIgnoreCase("error") || status.equalsIgnoreCase("denied");
     }
 
     /**
-     * Converts the response ({@link URL#openStream()} of a URL to a {@link JsonObject}.
+     * Converts the response {@link URL#openStream()} of a URL to a {@link JsonObject}.
      *
      * @param url The URL string from which to read and convert the response of.
      * @return The object if it was successfully converted.
